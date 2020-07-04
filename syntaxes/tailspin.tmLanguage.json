@@ -1,0 +1,104 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Tailspin",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#matchers"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#string"
+		},
+		{
+			"include": "#functions"
+		}
+	],
+	"repository": {
+		"comment": {
+			"patterns": [{
+				"name": "comment.line.double-slash.tailspin",
+				"match": "//[^\\n]*"
+			}]
+		},
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.tailspin",
+				"match": "(->|#|\\b(when|do|rule)\\b|!)"
+			}]
+		},
+		"string-interpolation": {
+			"patterns": [
+				{
+					"name": "constant.character",
+					"match": "\\$#\\d+;"
+				},
+				{
+					"name": "meta.string.interpolation.tailspin",
+					"begin": "(\\$)(:|(\\w+))?",
+					"beginCaptures": {"1": {"name": "keyword.other.tailspin"}, "3": {"name": "variable.name.tailspin"}},
+					"end": ";",
+					"endCaptures": {"0": {"name": "keyword.other.tailspin"}},
+					"patterns": [{"include": "$self"}]
+				}
+			]
+		},
+		"string": {
+			"begin": "'[^\\$']*",
+			"end": "((?<=;)[^\\$']*')|'|^[^\\$']*'",
+			"captures": {"0": {"name": "string.quoted.single.tailspin"}},
+			"patterns": [
+				{
+					"match": "\\$\\$",
+					"name": "string.quoted.single.tailspin"
+				},
+				{
+					"include": "#string-interpolation"
+				},
+				{
+					"match": "[^\\$]+",
+					"name": "string.quoted.single.tailspin"
+				}
+			]
+		},
+		"functions": {
+			"name": "meta.function.tailspin",
+			"begin": "\\b(templates|composer|processor)\\b\\s*(\\w+)\\b",
+			"end": "\\b(end)\\b\\s*(\\w+)\\b",
+			"captures": {"1": {"name":"storage.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
+			"patterns": [{"include": "$self"}]
+		},
+		"matchers": {
+			"patterns": [
+				{
+					"begin": "<(')",
+					"end": "(')>",
+					"captures": {"1":{"name": "string.regexp.tailspin"}},
+					"patterns": [
+						{
+							"match": "\\$\\$|''",
+							"name": "string.regexp.tailspin"
+						},
+						{
+							"include": "#string-interpolation"
+						},
+						{
+							"match": "[^\\$']+",
+							"name": "string.regexp.tailspin"
+						}
+					]
+				},
+				{
+					"begin": "<",
+					"end": ">",
+					"patterns": [{"include": "$self"}]
+				}
+			]
+		}
+	},
+	"scopeName": "source.tailspin"
+}
