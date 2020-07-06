@@ -16,6 +16,15 @@
 		},
 		{
 			"include": "#functions"
+		},
+		{
+			"include": "#object-literal"
+		},
+		{
+			"include": "#definition"
+		},
+		{
+			"include": "#number"
 		}
 	],
 	"repository": {
@@ -98,6 +107,66 @@
 					"patterns": [{"include": "$self"}]
 				}
 			]
+		},
+		"key": {
+			"name": "variable.other.key.tailspin",
+			"match": "\\w+\\s*:"
+		},
+		"object-literal": {
+			"name": "meta.objectliteral.tailspin",
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.block.tailspin"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.block.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#key"
+				},
+				{
+					"name": "meta.object-literal.value.tailspin",
+					"begin": "(?<=:)",
+					"end": "(?=[,}])",
+					"patterns": [{"include": "$self"}]
+				}
+			]
+		},
+		"definition": {
+			"name": "meta.objectliteral.tailspin",
+			"begin": "\\bdef\\b",
+			"beginCaptures": {
+				"0": {
+					"name": "storage.modifier.definition.tailspin"
+				}
+			},
+			"end": ";",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.end.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#key"
+				},
+				{
+					"name": "meta.definition.value.tailspin",
+					"begin": "(?<=:)",
+					"end": "(?=;)",
+					"patterns": [{"include": "$self"}]
+				}
+			]
+		},
+		"number": {
+			"match": "\\b\\d+\\b",
+			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
 		}
 	},
 	"scopeName": "source.tailspin"
