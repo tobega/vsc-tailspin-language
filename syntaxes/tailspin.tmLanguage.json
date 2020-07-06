@@ -6,10 +6,10 @@
 			"include": "#comment"
 		},
 		{
-			"include": "#matchers"
+			"include": "#matcher"
 		},
 		{
-			"include": "#keywords"
+			"include": "#control"
 		},
 		{
 			"include": "#string"
@@ -18,7 +18,10 @@
 			"include": "#functions"
 		},
 		{
-			"include": "#object-literal"
+			"include": "#inline-function"
+		},
+		{
+			"include": "#structure-literal"
 		},
 		{
 			"include": "#definition"
@@ -34,10 +37,10 @@
 				"match": "//[^\\n]*"
 			}]
 		},
-		"keywords": {
+		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|rule)\\b|!)"
+				"match": "(->|#|\\b(when|do|rule)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"string-interpolation": {
@@ -81,30 +84,87 @@
 			"captures": {"1": {"name":"storage.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
 			"patterns": [{"include": "$self"}]
 		},
-		"matchers": {
+		"inline-function": {
+			"name": "meta.function.tailspin",
+			"begin": "\\\\(\\w+)?(\\[\\s*\\w+(\\s*;\\s*\\w+)*\\s*\\])?\\(",
+			"end": "\\\\(\\1)\\)",
+			"captures": {"1": {"name": "entity.name.function.tailspin"}},
+			"patterns": [{"include": "$self"}]
+		},
+		"matcher": {
+			"name": "meta.match.tailspin",
+			"begin": "<",
+			"end": ">",
 			"patterns": [
 				{
-					"begin": "<(')",
-					"end": "(')>",
-					"captures": {"1":{"name": "string.regexp.tailspin"}},
+					"name": "meta.match.equality.tailspin",
+					"begin": "(?:\\s*)=",
+					"end": "\\||(?=[?>])",
 					"patterns": [
 						{
-							"match": "\\$\\$|''",
-							"name": "string.regexp.tailspin"
+							"include": "#string"
 						},
 						{
-							"include": "#string-interpolation"
+							"include": "#structure-literal"
 						},
 						{
-							"match": "[^\\$']+",
-							"name": "string.regexp.tailspin"
+							"include": "#array-literal"
+						},
+						{
+							"include": "#number"
+						},
+						{
+							"include": "#reference"
 						}
 					]
 				},
 				{
-					"begin": "<",
-					"end": ">",
-					"patterns": [{"include": "$self"}]
+					"name": "meta.match.type.tailspin",
+					"begin": "(?<=[<|])",
+					"end": "\\||(?=[?>])",
+					"patterns": [
+						{
+							"name": "meta.match.type.string.tailspin",
+							"begin": "(?<=[<|]\\s*)'",
+							"end": "((?<=;)[^\\$']*')|'|^[^\\$']*'(?=\\s*[|>])",
+							"captures": {"0":{"name": "string.regexp.tailspin"}},
+							"patterns": [
+								{
+									"match": "\\$\\$|''",
+									"name": "string.regexp.tailspin"
+								},
+								{
+									"include": "#string-interpolation"
+								},
+								{
+									"match": "[^\\$']+",
+									"name": "string.regexp.tailspin"
+								}
+							]
+						},
+						{
+							"name": "meta.match.type.structure.tailspin",
+							"begin": "(?<=[<|]\\s*){",
+							"end": "}(?=\\s*[|>])",
+							"patterns": [
+							]
+						},
+						{
+							"name": "meta.match.type.array.tailspin",
+							"begin": "(?<=[<|]\\s*)\\[",
+							"end": "\\](?=\\s*[|>])",
+							"patterns": [
+							]
+						},
+						{
+							"name": "meta.match.type.range.tailspin",
+							"begin": "(?<=[<|]\\s*)",
+							"end": "(?=\\s*[|>])",
+							"patterns": [
+								{"include": "#number"}
+							]
+						}
+					]
 				}
 			]
 		},
@@ -112,8 +172,8 @@
 			"name": "variable.other.key.tailspin",
 			"match": "\\w+\\s*:"
 		},
-		"object-literal": {
-			"name": "meta.objectliteral.tailspin",
+		"structure-literal": {
+			"name": "meta.structureliteral.tailspin",
 			"begin": "\\{",
 			"beginCaptures": {
 				"0": {
@@ -131,7 +191,7 @@
 					"include": "#key"
 				},
 				{
-					"name": "meta.object-literal.value.tailspin",
+					"name": "meta.structureliteral.value.tailspin",
 					"begin": "(?<=:)",
 					"end": "(?=[,}])",
 					"patterns": [{"include": "$self"}]
@@ -139,7 +199,7 @@
 			]
 		},
 		"definition": {
-			"name": "meta.objectliteral.tailspin",
+			"name": "meta.definition.tailspin",
 			"begin": "\\bdef\\b",
 			"beginCaptures": {
 				"0": {
