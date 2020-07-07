@@ -97,6 +97,9 @@
 			"end": ">",
 			"patterns": [
 				{
+					"include": "#such-that"
+				},
+				{
 					"name": "meta.match.equality.tailspin",
 					"begin": "(?:\\s*)=",
 					"end": "\\||(?=[?>])",
@@ -125,8 +128,8 @@
 					"patterns": [
 						{
 							"name": "meta.match.type.string.tailspin",
-							"begin": "(?<=[<|]\\s*)'",
-							"end": "((?<=;)[^\\$']*')|'|^[^\\$']*'(?=\\s*[|>])",
+							"begin": "'",
+							"end": "'",
 							"captures": {"0":{"name": "string.regexp.tailspin"}},
 							"patterns": [
 								{
@@ -144,29 +147,30 @@
 						},
 						{
 							"name": "meta.match.type.structure.tailspin",
-							"begin": "(?<=[<|]\\s*){",
-							"end": "}(?=\\s*[|>])",
+							"begin": "{",
+							"end": "}",
 							"patterns": [
 							]
 						},
 						{
 							"name": "meta.match.type.array.tailspin",
-							"begin": "(?<=[<|]\\s*)\\[",
-							"end": "\\](?=\\s*[|>])",
+							"begin": "\\[",
+							"end": "\\]",
 							"patterns": [
 							]
 						},
 						{
 							"name": "meta.match.type.range.tailspin",
-							"begin": "(?<=[<|]\\s*)",
-							"end": "(?=\\s*[|>])",
-							"patterns": [
-								{"include": "#number"}
-							]
+							"match": "(-?\\d+~?)?(\\.\\.)(~?-?\\d+)?"
 						}
 					]
 				}
 			]
+		},
+		"such-that": {
+			"name": "meta.match.suchthat.tailspin",
+			"begin": "\\?\\(",
+			"end": "\\)"
 		},
 		"key": {
 			"name": "variable.other.key.tailspin",
@@ -225,7 +229,7 @@
 			]
 		},
 		"number": {
-			"match": "\\b\\d+\\b",
+			"match": "\\d+",
 			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
 		}
 	},
