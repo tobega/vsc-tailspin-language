@@ -28,6 +28,9 @@
 		},
 		{
 			"include": "#number"
+		},
+		{
+			"include": "#reference"
 		}
 	],
 	"repository": {
@@ -258,6 +261,48 @@
 		"number": {
 			"match": "\\d+",
 			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
+		},
+		"reference": {
+			"patterns": [
+				{
+					"name": "meta.reference.array.tailspin",
+					"begin": "([\\$\\.])?(@)?(\\w+)\\(",
+					"beginCaptures": {
+						"1": {"name": "punctuation.reference.tailspin"},
+						"2": {"name": "support.type.state.tailspin"},
+						"3": {"name": "variable.other.tailspin"}
+					},
+					"end": "\\)"
+				},
+				{
+					"name": "support.variable.currentstate.tailspin",
+					"begin": "\\$@\\(",
+					"end": "\\)"
+				},
+				{
+					"name": "support.variable.currentstate.tailspin",
+					"match": "\\$@"
+				},
+				{
+					"name": "variable.other.currentvalue.tailspin",
+					"begin": "\\$\\(",
+					"end": "\\)"
+				},
+				{
+					"name": "variable.other.currentvalue.tailspin",
+					"match": "\\$"
+				},
+				{
+					"name": "entity.name.function",
+					"match": "(::)\\w+",
+					"captures": {"1":{"name": "punctuation.message.tailspin"}}
+				},
+				{
+					"name": "variable.other.tailspin",
+					"match": "(@)?\\w+",
+					"captures": {"1": {"name": "support.type.state.tailspin"}}
+				}
+			]
 		}
 	},
 	"scopeName": "source.tailspin"
