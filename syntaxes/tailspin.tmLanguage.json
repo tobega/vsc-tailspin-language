@@ -24,7 +24,13 @@
 			"include": "#structure-literal"
 		},
 		{
+			"include": "#array-literal"
+		},
+		{
 			"include": "#definition"
+		},
+		{
+			"include": "#state-mutation"
 		},
 		{
 			"include": "#number"
@@ -87,7 +93,7 @@
 		"functions": {
 			"name": "meta.function.tailspin",
 			"begin": "\\b(source|sink|templates|composer|processor)\\b\\s*(\\w+)\\b",
-			"end": "\\b(end)\\b\\s*(\\w+)\\b",
+			"end": "\\b(end)\\b\\s*(\\2)\\b",
 			"captures": {"1": {"name":"entity.name.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
 			"patterns": [
 				{
@@ -200,7 +206,8 @@
 		"such-that": {
 			"name": "meta.match.suchthat.tailspin",
 			"begin": "\\?\\(",
-			"end": "\\)"
+			"end": "\\)",
+			"patterns": [{"include": "$self"}]
 		},
 		"key": {
 			"name": "variable.other.key.tailspin",
@@ -232,6 +239,29 @@
 				}
 			]
 		},
+		"array-literal": {
+			"name": "meta.arrayliteral.tailspin",
+			"begin": "\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.array.tailspin"
+				}
+			},
+			"end": "\\]",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.array.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"name": "meta.arrayliteral.value.tailspin",
+					"begin": "(?<=[\\[,])",
+					"end": ",|(?=\\])",
+					"patterns": [{"include": "$self"}]
+				}
+			]
+		},
 		"definition": {
 			"name": "meta.definition.tailspin",
 			"begin": "\\bdef\\b",
@@ -258,6 +288,44 @@
 				}
 			]
 		},
+		"state-mutation": {
+			"name": "meta.mutation.state.tailspin",
+			"begin": "(\\.\\.\\|)?(@)(?=[^:]*:[^:])",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.operator.mutation.tailspin"
+				},
+				"2": {
+					"name": "support.type.state.tailspin"
+				}
+			},
+			"end": ";",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.mutation.end.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"name": "meta.mutation.reference.tailspin",
+					"begin": "(?<=@)",
+					"end": ":",
+					"patterns": [
+						{"include": "#reference"},
+						{
+							"name": "variable.other.tailspin",
+							"match": "\\w+"
+						}
+					]
+				},
+				{
+					"name": "meta.mutation.value.tailspin",
+					"begin": "(?<=:)",
+					"end": "(?=;)",
+					"patterns": [{"include": "$self"}]
+				}
+			]
+		},
 		"number": {
 			"match": "\\d+",
 			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
@@ -266,7 +334,24 @@
 			"patterns": [
 				{
 					"name": "meta.reference.array.tailspin",
-					"begin": "([\\$\\.])?(@)?(\\w+)\\(",
+					"begin": "([\\$\\.])(\\w+)\\(",
+					"beginCaptures": {
+						"1": {"name": "punctuation.reference.tailspin"},
+						"2": {"name": "variable.other.tailspin"}
+					},
+					"end": "\\)"
+				},
+				{
+					"name": "variable.other.tailspin",
+					"match": "([\\$\\.])(\\w+)",
+					"captures": {
+						"1": {"name": "punctuation.reference.tailspin"},
+						"2": {"name": "variable.other.tailspin"}
+					}
+				},
+				{
+					"name": "meta.reference.array.tailspin",
+					"begin": "(\\$)(@)(\\w*)\\(",
 					"beginCaptures": {
 						"1": {"name": "punctuation.reference.tailspin"},
 						"2": {"name": "support.type.state.tailspin"},
@@ -275,17 +360,37 @@
 					"end": "\\)"
 				},
 				{
-					"name": "support.variable.currentstate.tailspin",
-					"begin": "\\$@\\(",
+					"match": "(\\$)(@)(\\w*)",
+					"captures": {
+						"1": {"name": "punctuation.reference.tailspin"},
+						"2": {"name": "support.type.state.tailspin"},
+						"3": {"name": "variable.other.tailspin"}
+					}
+				},
+				{
+					"name": "meta.reference.array.tailspin",
+					"begin": "(\\^)(@)(\\w*)\\(",
+					"beginCaptures": {
+						"1": {"name": "keyword.operator.delete.tailspin"},
+						"2": {"name": "support.type.state.tailspin"},
+						"3": {"name": "variable.other.tailspin"}
+					},
 					"end": "\\)"
 				},
 				{
-					"name": "support.variable.currentstate.tailspin",
-					"match": "\\$@"
+					"match": "(\\^)(@)(\\w*)",
+					"captures": {
+						"1": {"name": "keyword.operator.delete.tailspin"},
+						"2": {"name": "support.type.state.tailspin"},
+						"3": {"name": "variable.other.tailspin"}
+					}
 				},
 				{
-					"name": "variable.other.currentvalue.tailspin",
-					"begin": "\\$\\(",
+					"name": "meta.reference.array.tailspin",
+					"begin": "(\\$)\\(",
+					"beginCaptures": {
+						"1": {"name": "variable.other.currentvalue.tailspin"}
+					},
 					"end": "\\)"
 				},
 				{
@@ -296,11 +401,6 @@
 					"name": "entity.name.function",
 					"match": "(::)\\w+",
 					"captures": {"1":{"name": "punctuation.message.tailspin"}}
-				},
-				{
-					"name": "variable.other.tailspin",
-					"match": "(@)?\\w+",
-					"captures": {"1": {"name": "support.type.state.tailspin"}}
 				}
 			]
 		}
