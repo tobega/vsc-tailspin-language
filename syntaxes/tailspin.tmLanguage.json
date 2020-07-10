@@ -398,8 +398,36 @@
 					"match": "\\$"
 				},
 				{
-					"name": "entity.name.function",
-					"match": "(::)\\w+",
+					"name": "variable.other.tailspin",
+					"match": "(@)?\\w+(?=[\\.:\\(])",
+					"captures": {"1":{"name": "support.type.state.tailspin"}}
+				},
+				{
+					"name": "meta.functioncall.parameterlist.tailspin",
+					"begin": "(::)?(\\w+)(@{)",
+					"beginCaptures": {
+						"1":{"name": "punctuation.message.tailspin"},
+						"2":{"name": "entity.name.function.tailspin"},
+						"3":{"name": "punctuation.definition.parameters.tailspin"}
+					},
+					"end": "}",
+					"endCaptures": {"0": {"name": "punctuation.definition.parameters.tailspin"}},
+					"patterns": [
+						{
+							"name": "variable.parameter.tailspin",
+							"match": "\\w+\\s*:"
+						},
+						{
+							"name": "meta.parameter.value.tailspin",
+							"begin": "(?<=:)",
+							"end": "(?=[,}])",
+							"patterns": [{"include": "$self"}]
+						}
+					]
+						},
+				{
+					"name": "entity.name.function.tailspin",
+					"match": "(::)?\\w+",
 					"captures": {"1":{"name": "punctuation.message.tailspin"}}
 				}
 			]
