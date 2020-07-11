@@ -24,6 +24,9 @@
 			"include": "#inline-function"
 		},
 		{
+			"include": "#composer"
+		},
+		{
 			"include": "#structure-literal"
 		},
 		{
@@ -55,7 +58,7 @@
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|rule|assert)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|assert)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"string-interpolation": {
@@ -105,7 +108,7 @@
 		},
 		"functions": {
 			"name": "meta.function.tailspin",
-			"begin": "\\b(source|sink|templates|composer|processor)\\b\\s*(\\w+)\\b",
+			"begin": "\\b(source|sink|templates|processor)\\b\\s*(\\w+)\\b",
 			"end": "\\b(end)\\b\\s*(\\2)\\b",
 			"captures": {"1": {"name":"entity.name.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
 			"patterns": [
@@ -139,6 +142,55 @@
 			"end": "\\\\(\\1)\\)",
 			"captures": {"0": {"name": "entity.name.function.tailspin"}},
 			"patterns": [{"include": "$self"}]
+		},
+		"composer": {
+			"name": "meta.function.tailspin",
+			"begin": "\\b(composer)\\b\\s*(\\w+)\\b",
+			"end": "\\b(end)\\b\\s*(\\2)\\b",
+			"captures": {"1": {"name":"entity.name.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
+			"patterns": [
+				{
+					"name": "meta.parameters.tailspin",
+					"begin": "\\@{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.tailspin"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.tailspin"
+						}
+					},
+					"patterns": [
+						{
+							"name": "variable.parameter.key.tailspin",
+							"match": "\\w+\\s*:"
+						}
+					]
+				},
+				{
+					"name": "meta.definition.rule.tailspin",
+					"match": "(rule)\\s+(\\w+\\s*)(:)",
+					"captures": {
+						"1": {"name": "storage.modifier.definition.tailspin"},
+						"2": {"name": "entity.name.type.tailspin"},
+						"3": {"name": "punctuation.assignment.tailspin"}
+					}
+				},
+				{
+					"include": "#match-multiplier"
+				},
+				{
+					"include": "$self"
+				}
+			]
+		},
+		"match-multiplier": {
+			"name": "keyword.other.multiplier.tailspin",
+			"match": "\\?|\\*|\\+|=(\\d+)",
+			"captures": {"1": {"name": "constant.numeric.tailspin"}}
 		},
 		"matcher": {
 			"name": "meta.match.tailspin",
@@ -180,6 +232,10 @@
 					"begin": "(?<=[<|~])",
 					"end": "\\||(?=[?>])",
 					"patterns": [
+						{
+							"name": "entity.name.type.tailspin",
+							"match": "\\w+"
+						},
 						{
 							"name": "meta.match.type.string.tailspin",
 							"begin": "'",
@@ -229,9 +285,7 @@
 									"include": "#matcher"
 								},
 								{
-									"name": "keyword.other.multiplier.tailspin",
-									"match": "\\?|\\*|\\+|=(\\d+)",
-									"captures": {"1": {"name": "constant.numeric.tailspin"}}
+									"include": "#match-multiplier"
 								}
 							]
 						},
