@@ -36,13 +36,13 @@
 			"include": "#state-mutation"
 		},
 		{
-			"include": "#range"
-		},
-		{
 			"include": "#number"
 		},
 		{
 			"include": "#reference"
+		},
+		{
+			"include": "#iteration"
 		}
 	],
 	"repository": {
@@ -215,14 +215,11 @@
 						},
 						{
 							"name": "meta.match.type.range.tailspin",
-							"match": "(-?\\d+)?(~)?(\\.\\.)(~)?(-?\\d+)?",
-							"captures": {
-								"1": {"name": "constant.numeric.tailspin"},
-								"2": {"name": "keyword.operator.exclude.tailspin"},
-								"3": {"name": "keyword.control.iterate.tailspin"},
-								"4": {"name": "keyword.operator.exclude.tailspin"},
-								"5": {"name": "constant.numeric.tailspin"}
-							}
+							"patterns": [
+								{"include": "#number"},
+								{"include": "#reference"},
+								{"include": "#iteration"}
+							]
 						}
 					]
 				}
@@ -353,22 +350,31 @@
 				}
 			]
 		},
-		"range": {
-			"name": "meta.range.tailspin",
-			"match": "(-?\\d+)(~)?(\\.\\.)(~)?(-?\\d+)((:)(-?\\d+))?",
-			"captures": {
-				"1": {"name": "constant.numeric.tailspin"},
-				"2": {"name": "keyword.operator.exclude.tailspin"},
-				"3": {"name": "keyword.control.iterate.tailspin"},
-				"4": {"name": "keyword.operator.exclude.tailspin"},
-				"5": {"name": "constant.numeric.tailspin"},
-				"7": {"name": "keyword.control.iterationstep.tailspin"},
-				"8": {"name": "constant.numeric.tailspin"}
-			}
-		},
 		"number": {
 			"match": "\\d+",
 			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
+		},
+		"array-index": {
+			"begin": "(?<=[\\(;])",
+			"end": ";|(?=\\))",
+			"patterns": [
+				{
+					"include": "#number"
+				},
+				{
+					"name": "constant.language.index.tailspin",
+					"match": "first|last"
+				},
+				{
+					"include": "#array-literal"
+				},
+				{
+					"include": "#reference"
+				},
+				{
+					"include": "#iteration"
+				}
+			]
 		},
 		"reference": {
 			"patterns": [
@@ -379,7 +385,8 @@
 						"1": {"name": "punctuation.reference.tailspin"},
 						"2": {"name": "variable.other.tailspin"}
 					},
-					"end": "\\)"
+					"end": "\\)",
+					"patterns": [{"include": "#array-index"}]
 				},
 				{
 					"name": "variable.other.tailspin",
@@ -397,7 +404,8 @@
 						"2": {"name": "support.type.state.tailspin"},
 						"3": {"name": "variable.other.tailspin"}
 					},
-					"end": "\\)"
+					"end": "\\)",
+					"patterns": [{"include": "#array-index"}]
 				},
 				{
 					"match": "(\\$)(@)(\\w*)",
@@ -415,7 +423,8 @@
 						"2": {"name": "support.type.state.tailspin"},
 						"3": {"name": "variable.other.tailspin"}
 					},
-					"end": "\\)"
+					"end": "\\)",
+					"patterns": [{"include": "#array-index"}]
 				},
 				{
 					"match": "(\\^)(@)(\\w*)",
@@ -431,7 +440,8 @@
 					"beginCaptures": {
 						"1": {"name": "variable.other.currentvalue.tailspin"}
 					},
-					"end": "\\)"
+					"end": "\\)",
+					"patterns": [{"include": "#array-index"}]
 				},
 				{
 					"name": "variable.other.currentvalue.tailspin",
@@ -471,6 +481,10 @@
 					"captures": {"1":{"name": "punctuation.message.tailspin"}}
 				}
 			]
+		},
+		"iteration": {
+			"name":"keyword.control.iteration.tailspin",
+			"match": "\\.\\.|:"
 		}
 	},
 	"scopeName": "source.tailspin"
