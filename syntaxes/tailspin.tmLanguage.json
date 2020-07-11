@@ -286,15 +286,23 @@
 							]
 						},
 						{
-							"name": "meta.match.type.range.tailspin",
-							"patterns": [
-								{"include": "#number"},
-								{"include": "#reference"},
-								{"include": "#iteration"}
-							]
+							"begin": "(?<=\\])\\(",
+							"end": "\\)",
+							"patterns": [{"include": "#range-match"}]
+						},
+						{
+							"include": "#range-match"
 						}
 					]
 				}
+			]
+		},
+		"range-match": {
+			"name": "meta.match.type.range.tailspin",
+			"patterns": [
+				{"include": "#number"},
+				{"include": "#reference"},
+				{"include": "#iteration"}
 			]
 		},
 		"such-that": {
