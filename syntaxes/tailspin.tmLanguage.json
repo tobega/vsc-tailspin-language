@@ -15,6 +15,9 @@
 			"include": "#string"
 		},
 		{
+			"include": "#tests"
+		},
+		{
 			"include": "#functions"
 		},
 		{
@@ -33,6 +36,9 @@
 			"include": "#state-mutation"
 		},
 		{
+			"include": "#range"
+		},
+		{
 			"include": "#number"
 		},
 		{
@@ -49,7 +55,7 @@
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|rule)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|rule|assert)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"string-interpolation": {
@@ -90,6 +96,13 @@
 				}
 			]
 		},
+		"tests": {
+			"name": "meta.test.tailspin",
+			"begin": "\\btest\\b",
+			"end": "\\bend\\b",
+			"captures": {"0": {"name":"entity.name.type.tailspin"}},
+			"patterns": [{"include": "$self"}]
+		},
 		"functions": {
 			"name": "meta.function.tailspin",
 			"begin": "\\b(source|sink|templates|composer|processor)\\b\\s*(\\w+)\\b",
@@ -124,20 +137,25 @@
 			"name": "meta.function.tailspin",
 			"begin": "\\\\(\\w+)?(\\[\\s*\\w+(\\s*;\\s*\\w+)*\\s*\\])?\\(",
 			"end": "\\\\(\\1)\\)",
-			"captures": {"1": {"name": "entity.name.function.tailspin"}},
+			"captures": {"0": {"name": "entity.name.function.tailspin"}},
 			"patterns": [{"include": "$self"}]
 		},
 		"matcher": {
 			"name": "meta.match.tailspin",
-			"begin": "<",
+			"begin": "<(~)?",
+			"beginCaptures": {
+				"0": {"name": "punctuation.matcher.tailspin"},
+				"1": {"name": "support.function.negation.tailspin"}
+			},
 			"end": ">",
+			"endCaptures": {"0": {"name": "punctuation.matcher.tailspin"}},
 			"patterns": [
 				{
 					"include": "#such-that"
 				},
 				{
 					"name": "meta.match.equality.tailspin",
-					"begin": "(?:\\s*)=",
+					"begin": "(?<=[<|~])(?:\\s*)=",
 					"end": "\\||(?=[?>])",
 					"patterns": [
 						{
@@ -159,7 +177,7 @@
 				},
 				{
 					"name": "meta.match.type.tailspin",
-					"begin": "(?<=[<|])",
+					"begin": "(?<=[<|~])",
 					"end": "\\||(?=[?>])",
 					"patterns": [
 						{
@@ -197,7 +215,14 @@
 						},
 						{
 							"name": "meta.match.type.range.tailspin",
-							"match": "(-?\\d+~?)?(\\.\\.)(~?-?\\d+)?"
+							"match": "(-?\\d+)?(~)?(\\.\\.)(~)?(-?\\d+)?",
+							"captures": {
+								"1": {"name": "constant.numeric.tailspin"},
+								"2": {"name": "keyword.operator.exclude.tailspin"},
+								"3": {"name": "keyword.control.iterate.tailspin"},
+								"4": {"name": "keyword.operator.exclude.tailspin"},
+								"5": {"name": "constant.numeric.tailspin"}
+							}
 						}
 					]
 				}
@@ -207,6 +232,7 @@
 			"name": "meta.match.suchthat.tailspin",
 			"begin": "\\?\\(",
 			"end": "\\)",
+			"captures": {"0": {"name": "keyword.other.suchthat.tailspin"}},
 			"patterns": [{"include": "$self"}]
 		},
 		"key": {
@@ -218,18 +244,19 @@
 			"begin": "\\{",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.block.tailspin"
+					"name": "markup.punctuation.structure.tailspin"
 				}
 			},
 			"end": "\\}",
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.block.tailspin"
+					"name": "markup.punctuation.structure.tailspin"
 				}
 			},
 			"patterns": [
 				{
-					"include": "#key"
+					"name": "support.type.property-name.tailspin",
+					"match": "\\w+\\s*:"
 				},
 				{
 					"name": "meta.structureliteral.value.tailspin",
@@ -244,13 +271,13 @@
 			"begin": "\\[",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.array.tailspin"
+					"name": "markup.punctuation.list.tailspin"
 				}
 			},
 			"end": "\\]",
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.array.tailspin"
+					"name": "markup.punctuation.list.tailspin"
 				}
 			},
 			"patterns": [
@@ -325,6 +352,19 @@
 					"patterns": [{"include": "$self"}]
 				}
 			]
+		},
+		"range": {
+			"name": "meta.range.tailspin",
+			"match": "(-?\\d+)(~)?(\\.\\.)(~)?(-?\\d+)((:)(-?\\d+))?",
+			"captures": {
+				"1": {"name": "constant.numeric.tailspin"},
+				"2": {"name": "keyword.operator.exclude.tailspin"},
+				"3": {"name": "keyword.control.iterate.tailspin"},
+				"4": {"name": "keyword.operator.exclude.tailspin"},
+				"5": {"name": "constant.numeric.tailspin"},
+				"7": {"name": "keyword.control.iterationstep.tailspin"},
+				"8": {"name": "constant.numeric.tailspin"}
+			}
 		},
 		"number": {
 			"match": "\\d+",
