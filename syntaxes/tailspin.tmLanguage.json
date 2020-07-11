@@ -36,9 +36,6 @@
 			"include": "#definition"
 		},
 		{
-			"include": "#state-mutation"
-		},
-		{
 			"include": "#number"
 		},
 		{
@@ -46,6 +43,9 @@
 		},
 		{
 			"include": "#iteration"
+		},
+		{
+			"include": "#state-mutation"
 		}
 	],
 	"repository": {
@@ -77,7 +77,12 @@
 					"beginCaptures": {"1": {"name": "punctuation.interpolation.start.tailspin"}, "3": {"name": "variable.name.tailspin"}},
 					"end": ";",
 					"endCaptures": {"0": {"name": "punctuation.interpolation.end.tailspin"}},
-					"patterns": [{"include": "$self"}]
+					"patterns": [
+						{
+							"include": "#parameter-list"
+						},
+						{"include": "$self"}
+					]
 				}
 			]
 		},
@@ -113,25 +118,7 @@
 			"captures": {"1": {"name":"entity.name.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
 			"patterns": [
 				{
-					"name": "meta.parameters.tailspin",
-					"begin": "\\@{",
-					"beginCaptures": {
-						"0": {
-							"name": "punctuation.definition.parameters.tailspin"
-						}
-					},
-					"end": "\\}",
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.definition.parameters.tailspin"
-						}
-					},
-					"patterns": [
-						{
-							"name": "variable.parameter.key.tailspin",
-							"match": "\\w+\\s*:"
-						}
-					]
+					"include": "#parameter-list"
 				},
 				{"include": "$self"}
 			]
@@ -150,25 +137,7 @@
 			"captures": {"1": {"name":"entity.name.type.tailspin"}, "2": {"name": "entity.name.function.tailspin"}},
 			"patterns": [
 				{
-					"name": "meta.parameters.tailspin",
-					"begin": "\\@{",
-					"beginCaptures": {
-						"0": {
-							"name": "punctuation.definition.parameters.tailspin"
-						}
-					},
-					"end": "\\}",
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.definition.parameters.tailspin"
-						}
-					},
-					"patterns": [
-						{
-							"name": "variable.parameter.key.tailspin",
-							"match": "\\w+\\s*:"
-						}
-					]
+					"include": "#parameter-list"
 				},
 				{
 					"name": "meta.definition.rule.tailspin",
@@ -184,6 +153,33 @@
 				},
 				{
 					"include": "$self"
+				}
+			]
+		},
+		"parameter-list": {
+			"name": "meta.parameters.tailspin",
+			"begin": "@{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.tailspin"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"name": "variable.parameter.tailspin",
+					"match": "\\w+\\s*:"
+				},
+				{
+					"name": "meta.parameter.value.tailspin",
+					"begin": "(?<=:)",
+					"end": ",|(?=})",
+					"patterns": [{"include": "$self"}]
 				}
 			]
 		},
@@ -526,32 +522,12 @@
 					"captures": {"1":{"name": "support.type.state.tailspin"}}
 				},
 				{
-					"name": "meta.functioncall.parameterlist.tailspin",
-					"begin": "(::)?(\\w+)(@{)",
-					"beginCaptures": {
-						"1":{"name": "punctuation.message.tailspin"},
-						"2":{"name": "entity.name.function.tailspin"},
-						"3":{"name": "punctuation.definition.parameters.tailspin"}
-					},
-					"end": "}",
-					"endCaptures": {"0": {"name": "punctuation.definition.parameters.tailspin"}},
-					"patterns": [
-						{
-							"name": "variable.parameter.tailspin",
-							"match": "\\w+\\s*:"
-						},
-						{
-							"name": "meta.parameter.value.tailspin",
-							"begin": "(?<=:)",
-							"end": "(?=[,}])",
-							"patterns": [{"include": "$self"}]
-						}
-					]
-						},
-				{
 					"name": "entity.name.function.tailspin",
 					"match": "(::)?\\w+",
 					"captures": {"1":{"name": "punctuation.message.tailspin"}}
+				},
+				{
+					"include": "#parameter-list"
 				}
 			]
 		},
