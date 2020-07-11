@@ -202,15 +202,37 @@
 						{
 							"name": "meta.match.type.structure.tailspin",
 							"begin": "{",
-							"end": "}",
+							"end": "(VOID)?}",
+							"endCaptures": {
+								"1": {"name": "keyword.other.nomore.tailspin"}
+							},
 							"patterns": [
+								{
+									"name": "support.type.property-name.tailspin",
+									"match": "\\w+\\s*:"
+								},
+								{
+									"include": "#matcher"
+								}
 							]
 						},
 						{
 							"name": "meta.match.type.array.tailspin",
 							"begin": "\\[",
-							"end": "\\]",
+							"end": "(VOID)?\\](\\((\\d+)\\))?",
+							"endCaptures": {
+								"1": {"name": "keyword.other.nomore.tailspin"},
+								"3": {"name": "constant.numeric.tailspin"}
+							},
 							"patterns": [
+								{
+									"include": "#matcher"
+								},
+								{
+									"name": "keyword.other.multiplier.tailspin",
+									"match": "\\?|\\*|\\+|=(\\d+)",
+									"captures": {"1": {"name": "constant.numeric.tailspin"}}
+								}
 							]
 						},
 						{
@@ -231,10 +253,6 @@
 			"end": "\\)",
 			"captures": {"0": {"name": "keyword.other.suchthat.tailspin"}},
 			"patterns": [{"include": "$self"}]
-		},
-		"key": {
-			"name": "variable.other.key.tailspin",
-			"match": "\\w+\\s*:"
 		},
 		"structure-literal": {
 			"name": "meta.structureliteral.tailspin",
@@ -302,7 +320,8 @@
 			},
 			"patterns": [
 				{
-					"include": "#key"
+					"name": "variable.other.key.tailspin",
+					"match": "\\w+\\s*:"
 				},
 				{
 					"name": "meta.definition.value.tailspin",
