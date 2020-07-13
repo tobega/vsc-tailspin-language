@@ -58,7 +58,7 @@
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|assert)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|otherwise|assert)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"string-interpolation": {
