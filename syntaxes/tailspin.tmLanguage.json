@@ -73,7 +73,7 @@
 				},
 				{
 					"name": "meta.string.interpolation.tailspin",
-					"begin": "(\\$)(\\w+)(?=@)",
+					"begin": "(\\$)(\\w+)(?=&)",
 					"beginCaptures": {
 						"1": {"name": "punctuation.interpolation.start.tailspin"},
 						"2": {"name": "entity.name.function.tailspin"}},
@@ -170,7 +170,7 @@
 		},
 		"parameter-list": {
 			"name": "meta.parameters.tailspin",
-			"begin": "@{",
+			"begin": "&{",
 			"beginCaptures": {
 				"0": {
 					"name": "punctuation.definition.parameters.tailspin"
@@ -469,7 +469,7 @@
 			"patterns": [
 				{
 					"name": "meta.functioncall.source.tailspin",
-					"match": "(\\$)(\\w+)(?=@)",
+					"match": "(\\$)(\\w+)(?=&)",
 					"captures": {
 						"1": {"name": "punctuation.reference.tailspin"},
 						"2": {"name": "entity.name.function.tailspin"}
