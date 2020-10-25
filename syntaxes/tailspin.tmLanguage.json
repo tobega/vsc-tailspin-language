@@ -6,6 +6,9 @@
 			"include": "#comment"
 		},
 		{
+			"include": "#core"
+		},
+		{
 			"include": "#matcher"
 		},
 		{
@@ -16,6 +19,9 @@
 		},
 		{
 			"include": "#tests"
+		},
+		{
+			"include": "#module-modifications"
 		},
 		{
 			"include": "#functions"
@@ -55,10 +61,16 @@
 				"match": "//[^\\n]*"
 			}]
 		},
+		"core": {
+			"patterns": [{
+				"name": "constant.language.tailspin",
+				"match": "core-system/"
+			}]
+		},
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|otherwise|assert)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|with|provided)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"string-interpolation": {
@@ -119,6 +131,13 @@
 		"tests": {
 			"name": "meta.test.tailspin",
 			"begin": "\\btest\\b",
+			"end": "\\bend\\b",
+			"captures": {"0": {"name":"entity.name.type.tailspin"}},
+			"patterns": [{"include": "$self"}]
+		},
+		"module-modifications": {
+			"name": "meta.test.tailspin",
+			"begin": "\\b(shadowed|modified)\\b",
 			"end": "\\bend\\b",
 			"captures": {"0": {"name":"entity.name.type.tailspin"}},
 			"patterns": [{"include": "$self"}]
