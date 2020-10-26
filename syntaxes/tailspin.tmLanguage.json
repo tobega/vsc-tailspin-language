@@ -100,8 +100,10 @@
 				},
 				{
 					"name": "meta.string.interpolation.tailspin",
-					"begin": "(\\$)(:|(\\w+))?",
-					"beginCaptures": {"1": {"name": "punctuation.interpolation.start.tailspin"}, "3": {"name": "variable.name.tailspin"}},
+					"begin": "(\\$)(:|(@)?(\\w+)?)?",
+					"beginCaptures": {"1": {"name": "punctuation.interpolation.start.tailspin"},
+						"3": {"name": "support.type.state.tailspin"},
+						"4": {"name": "variable.name.tailspin"}},
 					"end": ";",
 					"endCaptures": {"0": {"name": "punctuation.interpolation.end.tailspin"}},
 					"patterns": [
