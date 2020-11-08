@@ -39,6 +39,9 @@
 			"include": "#structure-literal"
 		},
 		{
+			"include": "#bytes"
+		},
+		{
 			"include": "#array-literal"
 		},
 		{
@@ -413,6 +416,43 @@
 					"begin": "(?<=[\\[,])",
 					"end": ",|(?=\\])",
 					"patterns": [{"include": "$self"}]
+				}
+			]
+		},
+		"bytes": {
+			"name": "meta.bytes.tailspin",
+			"begin": "\\[x",
+			"beginCaptures": {
+				"0": {
+					"name": "markup.punctuation.bytes.tailspin"
+				}
+			},
+			"end": "\\s*x\\]",
+			"endCaptures": {
+				"0": {
+					"name": "markup.punctuation.bytes.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"name": "meta.bytes.value.tailspin",
+					"begin": "(?<=(x\\s*|\\s+))",
+					"end": "\\s+|\\s*(?=x)",
+					"patterns": [
+						{
+							"name": "constant.numeric.tailspin",
+							"match": "([0-9a-fA-F][0-9a-fA-F])+"
+						},
+						{
+							"name": "meta.term.tailspin",
+							"begin": "\\(",
+							"end": "\\)",
+							"captures": {
+								"0": { "name": "markup.punctuation.term.tailspin"}
+							},
+							"patterns": [{"include": "$self"}]
+						}
+					]
 				}
 			]
 		},
