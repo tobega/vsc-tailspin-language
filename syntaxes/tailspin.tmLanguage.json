@@ -54,6 +54,9 @@
 			"include": "#reference"
 		},
 		{
+			"include": "#composer-exclusion"
+		},
+		{
 			"include": "#iteration"
 		},
 		{
@@ -211,6 +214,17 @@
 					"include": "$self"
 				}
 			]
+		},
+		"composer-exclusion": {
+			"name": "meta.exclusion.composer.tailspin",
+			"begin": "\\(",
+			"end": "\\)",
+			"captures": {
+				"0": {"name": "punctuation.exclusion.tailspin"}
+			},
+			"patterns": [{
+				"include": "$self"
+			}]
 		},
 		"parameter-list": {
 			"name": "meta.parameters.tailspin",
@@ -393,6 +407,9 @@
 					"begin": "(?<=:)",
 					"end": "(?=[,}])",
 					"patterns": [{"include": "$self"}]
+				},
+				{
+					"include": "#composer-exclusion"
 				}
 			]
 		},
