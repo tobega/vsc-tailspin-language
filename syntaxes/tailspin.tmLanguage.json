@@ -409,7 +409,7 @@
 					"patterns": [{"include": "$self"}]
 				},
 				{
-					"include": "#composer-exclusion"
+					"include": "$self"
 				}
 			]
 		},
