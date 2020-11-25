@@ -48,6 +48,9 @@
 			"include": "#definition"
 		},
 		{
+			"include": "#stereotype"
+		},
+		{
 			"include": "#number"
 		},
 		{
@@ -169,6 +172,11 @@
 				},
 				{"include": "$self"}
 			]
+		},
+		"stereotype": {
+			"name": "meta.stereotype.tailspin",
+			"match": "\\b(stereotype)\\b\\s*(\\w+)\\b",
+			"captures": {"1": {"name":"storage.modifier.definition.tailspin"}, "2": {"name": "entity.name.type.tailspin"}}
 		},
 		"functions": {
 			"name": "meta.function.tailspin",
