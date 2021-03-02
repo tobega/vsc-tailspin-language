@@ -245,6 +245,7 @@
 					"name": "punctuation.definition.parameters.tailspin"
 				}
 			},
+			"hack": "Word in end is for right parameter of operator",
 			"end": "(})(\\s*(\\w+)\\))?",
 			"endCaptures": {
 				"1": {
@@ -604,24 +605,72 @@
 					"include": "#structure-projection"
 				},
 				{
+					"include": "#collect-by"
+				},
+				{
 					"include": "#reference"
 				}
 			]
 		},
+		"collect-by": {
+			"name": "meta.projection.tailspin",
+			"begin": "(?<=\\(\\s*)collect",
+			"beginCaptures": {
+				"0": {"name": "keyword.control.tailspin"}
+			},
+			"end": "(?=\\))",
+			"patterns": [
+				{
+					"begin": "\\{",
+					"beginCaptures": {
+						"0": {
+							"name": "markup.punctuation.structure.tailspin"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "markup.punctuation.structure.tailspin"
+						}
+					},
+					"patterns": [
+						{
+							"name": "support.type.property-name.tailspin",
+							"match": "\\w+\\s*:"
+						},
+						{
+							"name": "meta.structureliteral.value.tailspin",
+							"begin": "(?<=:)",
+							"end": "(?=[,}])",
+							"patterns": [{"include": "#reference"}]
+						}
+					]
+				},
+				{
+					"begin": "by",
+					"beginCaptures": {
+						"0": {"name": "keyword.control.tailspin"}
+					},
+					"end": "(?=\\))",
+					"patterns": [
+						{"include": "$self"}
+					]
+				}
+			]
+		},
 		"structure-projection": {
-			"name": "meta.parameters.tailspin",
+			"name": "meta.projection.tailspin",
 			"begin": "{",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.parameters.tailspin"
+					"name": "punctuation.definition.projection.tailspin"
 				}
 			},
-			"end": "(})(\\s*(\\w+)\\))?",
+			"end": "}",
 			"endCaptures": {
-				"1": {
-					"name": "punctuation.definition.parameters.tailspin"
-				},
-				"3": {"name": "variable.parameter.tailspin"}
+				"0": {
+					"name": "punctuation.definition.projection.tailspin"
+				}
 			},
 			"patterns": [
 				{
@@ -629,7 +678,7 @@
 					"match": "\\w+\\s*:"
 				},
 				{
-					"name": "meta.parameter.value.tailspin",
+					"name": "meta.projection.value.tailspin",
 					"begin": "(?<=:)",
 					"end": ",|(?=})",
 					"patterns": [{"include": "$self"}]
