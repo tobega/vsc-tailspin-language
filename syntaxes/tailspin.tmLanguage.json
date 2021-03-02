@@ -36,6 +36,9 @@
 			"include": "#composer"
 		},
 		{
+			"include": "#relation-literal"
+		},
+		{
 			"include": "#structure-literal"
 		},
 		{
@@ -82,7 +85,7 @@
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|with|provided)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|with|provided|by)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"string-interpolation": {
@@ -421,6 +424,32 @@
 				}
 			]
 		},
+		"relation-literal": {
+			"name": "meta.relationliteral.tailspin",
+			"begin": "\\{\\|",
+			"beginCaptures": {
+				"0": {
+					"name": "markup.punctuation.relation.tailspin"
+				}
+			},
+			"end": "\\|\\}",
+			"endCaptures": {
+				"0": {
+					"name": "markup.punctuation.relation.tailspin"
+				}
+			},
+			"patterns": [
+				{
+					"name": "meta.relationliteral.value.tailspin",
+					"begin": "(?<=(\\{\\||,))",
+					"end": "(?=(,|\\|\\}))",
+					"patterns": [{"include": "$self"}]
+				},
+				{
+					"include": "$self"
+				}
+			]
+		},
 		"array-literal": {
 			"name": "meta.arrayliteral.tailspin",
 			"begin": "\\[",
@@ -550,7 +579,7 @@
 			"match": "\\d+",
 			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
 		},
-		"array-index": {
+		"projection": {
 			"begin": "(?<=[\\(;])",
 			"end": ";|(?=\\))",
 			"patterns": [
@@ -565,10 +594,45 @@
 					"include": "#array-literal"
 				},
 				{
-					"include": "#reference"
+					"include": "#iteration"
 				},
 				{
-					"include": "#iteration"
+					"name": "support.type.property-name.tailspin",
+					"match": "\\w+\\s*:"
+				},
+				{
+					"include": "#structure-projection"
+				},
+				{
+					"include": "#reference"
+				}
+			]
+		},
+		"structure-projection": {
+			"name": "meta.parameters.tailspin",
+			"begin": "{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.tailspin"
+				}
+			},
+			"end": "(})(\\s*(\\w+)\\))?",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.parameters.tailspin"
+				},
+				"3": {"name": "variable.parameter.tailspin"}
+			},
+			"patterns": [
+				{
+					"name": "support.type.property-name.tailspin",
+					"match": "\\w+\\s*:"
+				},
+				{
+					"name": "meta.parameter.value.tailspin",
+					"begin": "(?<=:)",
+					"end": ",|(?=})",
+					"patterns": [{"include": "$self"}]
 				}
 			]
 		},
@@ -584,20 +648,38 @@
 				},
 				{
 					"name": "meta.reference.array.tailspin",
-					"begin": "([\\$\\.])(\\w+)\\(",
+					"begin": "(\\$)(\\w+)\\(",
 					"beginCaptures": {
 						"1": {"name": "punctuation.reference.tailspin"},
 						"2": {"name": "variable.other.tailspin"}
 					},
 					"end": "\\)",
-					"patterns": [{"include": "#array-index"}]
+					"patterns": [{"include": "#projection"}]
 				},
 				{
 					"name": "meta.reference.tailspin",
-					"match": "([\\$\\.])(\\w+)",
+					"match": "(\\$)(\\w+)",
 					"captures": {
 						"1": {"name": "punctuation.reference.tailspin"},
 						"2": {"name": "variable.other.tailspin"}
+					}
+				},
+				{
+					"name": "meta.property.array.tailspin",
+					"begin": "(\\.)(\\w+)\\(",
+					"beginCaptures": {
+						"1": {"name": "punctuation.reference.tailspin"},
+						"2": {"name": "support.type.property-name.tailspin"}
+					},
+					"end": "\\)",
+					"patterns": [{"include": "#projection"}]
+				},
+				{
+					"name": "meta.property.tailspin",
+					"match": "(\\.)(\\w+)",
+					"captures": {
+						"1": {"name": "punctuation.reference.tailspin"},
+						"2": {"name": "support.type.property-name.tailspin"}
 					}
 				},
 				{
@@ -609,7 +691,7 @@
 						"3": {"name": "variable.other.tailspin"}
 					},
 					"end": "\\)",
-					"patterns": [{"include": "#array-index"}]
+					"patterns": [{"include": "#projection"}]
 				},
 				{
 					"match": "(\\$)(@)(\\w*)",
@@ -628,7 +710,7 @@
 						"3": {"name": "variable.other.tailspin"}
 					},
 					"end": "\\)",
-					"patterns": [{"include": "#array-index"}]
+					"patterns": [{"include": "#projection"}]
 				},
 				{
 					"match": "(\\^)(@)(\\w*)",
@@ -645,7 +727,7 @@
 						"1": {"name": "variable.other.currentvalue.tailspin"}
 					},
 					"end": "\\)",
-					"patterns": [{"include": "#array-index"}]
+					"patterns": [{"include": "#projection"}]
 				},
 				{
 					"name": "variable.other.currentvalue.tailspin",
