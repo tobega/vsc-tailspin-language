@@ -6,6 +6,9 @@
 			"include": "#comment"
 		},
 		{
+			"include": "#data-declaration"
+		},
+		{
 			"include": "#core"
 		},
 		{
@@ -51,9 +54,6 @@
 			"include": "#definition"
 		},
 		{
-			"include": "#stereotype"
-		},
-		{
 			"include": "#number"
 		},
 		{
@@ -67,7 +67,7 @@
 		},
 		{
 			"include": "#state-mutation"
-		}
+		}		
 	],
 	"repository": {
 		"comment": {
@@ -85,7 +85,15 @@
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|with|provided|by)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|with|provided|by|data|local)\\b|!|\\.\\.\\.)"
+			}]
+		},
+		"data-declaration": {
+			"begin": "(\\w+)\\s*(?=<)",
+			"beginCaptures": {"1":{"name": "entity.name.type.tailspin"}},
+			"end": "(?<=>)",
+			"patterns": [{
+				"include": "#matcher"
 			}]
 		},
 		"string-interpolation": {
@@ -128,9 +136,13 @@
 			]
 		},
 		"string": {
-			"begin": "'[^\\$']*",
+			"begin": "(\\w+´)?('[^\\$']*)",
 			"end": "((?<=;)[^\\$']*')|'|^[^\\$']*'",
-			"captures": {"0": {"name": "string.quoted.single.tailspin"}},
+			"beginCaptures": {
+					"1": {"name":"entity.name.type.tailspin"},
+					"2": {"name": "string.quoted.single.tailspin"}
+			},
+			"endCaptures": {"0": {"name": "string.quoted.single.tailspin"}},
 			"patterns": [
 				{
 					"match": "\\$\\$",
@@ -175,11 +187,6 @@
 				},
 				{"include": "$self"}
 			]
-		},
-		"stereotype": {
-			"name": "meta.stereotype.tailspin",
-			"match": "\\b(stereotype)\\b\\s*(\\w+)\\b",
-			"captures": {"1": {"name":"storage.modifier.definition.tailspin"}, "2": {"name": "entity.name.type.tailspin"}}
 		},
 		"functions": {
 			"name": "meta.function.tailspin",
@@ -273,10 +280,11 @@
 		},
 		"matcher": {
 			"name": "meta.match.tailspin",
-			"begin": "<(~)?",
+			"begin": "<(~)?(´[^´]*´)?",
 			"beginCaptures": {
 				"0": {"name": "punctuation.matcher.tailspin"},
-				"1": {"name": "support.function.negation.tailspin"}
+				"1": {"name": "support.function.negation.tailspin"},
+				"2": {"name": "entity.name.type.tailspin"}
 			},
 			"end": ">",
 			"endCaptures": {"0": {"name": "punctuation.matcher.tailspin"}},
@@ -311,10 +319,6 @@
 					"begin": "(?<=[<|~])",
 					"end": "\\||(?=[?>])",
 					"patterns": [
-						{
-							"name": "entity.name.type.tailspin",
-							"match": "\\w+"
-						},
 						{
 							"name": "meta.match.type.string.tailspin",
 							"begin": "'",
@@ -353,7 +357,12 @@
 						},
 						{
 							"name": "meta.match.type.array.tailspin",
-							"begin": "\\[",
+							"begin": "((\\w+´)?(\\d+)(\"[^\"]+\")?:)?\\[",
+							"beginCaptures": {
+								"2": {"name":"entity.name.type.tailspin"},
+								"3": {"name": "constant.numeric.integer.tailspin"},
+								"4": {"name": "constant.numeric.integer.tailspin"}				
+							},
 							"end": "(VOID)?\\](\\((\\d+)\\))?",
 							"endCaptures": {
 								"1": {"name": "keyword.other.nomore.tailspin"},
@@ -369,9 +378,14 @@
 							]
 						},
 						{
+							"name": "meta.match.type.array.tailspin",
 							"begin": "(?<=\\])\\(",
 							"end": "\\)",
 							"patterns": [{"include": "#range-match"}]
+						},
+						{
+							"name": "entity.name.type.tailspin",
+							"match": "(?<!\\.\\s*)\\w+(?!\\s*\\.)"
 						},
 						{
 							"include": "#range-match"
@@ -577,8 +591,12 @@
 			]
 		},
 		"number": {
-			"match": "\\d+",
-			"captures": {"0": {"name": "constant.numeric.integer.tailspin"}}
+			"match": "(\\w+´)?(\\d+)(\"[^\"]+\")?",
+			"captures": {
+				"1": {"name":"entity.name.type.tailspin"},
+			  "2": {"name": "constant.numeric.integer.tailspin"},
+			  "3": {"name": "constant.numeric.integer.tailspin"}
+			}
 		},
 		"projection": {
 			"begin": "(?<=[\\(;])",
