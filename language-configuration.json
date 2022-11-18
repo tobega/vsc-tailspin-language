@@ -9,8 +9,16 @@
         ["\\(", "\\)"],
         ["<", ">"],
         ["templates", "end"],
+        ["source", "end"],
+        ["sink", "end"],
         ["composer", "end"],
-        ["processor", "end"]
+        ["processor", "end"],
+        ["test", "end"],
+        ["modify", "end"],
+        ["use", "end"],
+        ["with", "provided"],
+        ["modified", "end"],
+        ["shadowed", "end"]
     ],
     "autoClosingPairs": [
         ["{", "}"],
