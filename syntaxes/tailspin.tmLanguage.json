@@ -85,7 +85,7 @@
 		"control": {
 			"patterns": [{
 				"name": "keyword.control.tailspin",
-				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|with|provided|by|data|local)\\b|!|\\.\\.\\.)"
+				"match": "(->|#|\\b(when|do|otherwise|assert|include|use|from|inherited|stand-alone|by|data|local)\\b|!|\\.\\.\\.)"
 			}]
 		},
 		"data-declaration": {
