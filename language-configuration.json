@@ -13,6 +13,7 @@
         ["sink", "end"],
         ["composer", "end"],
         ["processor", "end"],
+        ["operator", "end"],
         ["test", "end"],
         ["modify", "end"],
         ["with", "provided"],
