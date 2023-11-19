@@ -1,25 +1,25 @@
 {
-    "name": "vsc-tailspin-language",
-    "displayName": "Tailspin language",
-    "description": "Syntax highlighting for the Tailspin programming language",
-    "version": "0.0.1",
-    "engines": {
-        "vscode": "^1.46.0"
-    },
-    "categories": [
-        "Programming Languages"
-    ],
-    "contributes": {
-        "languages": [{
-            "id": "tailspin",
-            "aliases": ["Tailspin", "tailspin"],
-            "extensions": [".tt"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "tailspin",
-            "scopeName": "source.tailspin",
-            "path": "./syntaxes/tailspin.tmLanguage.json"
-        }]
-    }
+  "name": "tailspin",
+  "displayName": "tailspin",
+  "description": "syntax highlighting for tailspin language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "tailspin",
+      "aliases": ["Tailspin", "tailspin"],
+      "extensions": [".tt"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "tailspin",
+      "scopeName": "source.tailspin",
+      "path": "./syntaxes/tailspin.tmLanguage.json"
+    }]
+  }
 }
